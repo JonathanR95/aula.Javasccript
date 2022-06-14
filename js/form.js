@@ -6,17 +6,36 @@ botaoAdicionar.addEventListener("click", function(event){
     //extraindo informações do form
     var paciente = obtemPacienteDoFormulario(form);
     //Cria TR e Tds
-    var pacienteTr = montaTr(paciente);
-    
-    
+    var pacienteTr = montaTr(paciente); 
+
+    var erros = validaPaciente(paciente);
+
+    if (erros.length > 0){
+        exibeMensagensDeErro(erros);
+        return;
+    }
+
     //adicionando o paciente na tabela
     var tabela = document.querySelector("#tabela-pacientes");
 
     tabela.appendChild(pacienteTr);
 
     form.reset();
+    var mensagensErro =document.querySelector("#mensagens-erro");
+    mensagensErro.innerHTML = '';
 
 });
+
+function exibeMensagensDeErro(erros){
+    var ul = document.querySelector ("#mensagens-erro");
+    ul.innerHTML = "";
+
+    erros.forEach(function(erro){
+        var li = document.createElement("li");
+        li.textContent = erro;
+        ul.appendChild(li);
+    });
+}
 
 function obtemPacienteDoFormulario(form){
 
@@ -50,4 +69,35 @@ function montaTd(dado, classe){
     td.classList.add(classe);
 
     return td;
+}
+
+function validaPaciente(paciente){
+
+    var erros = [];
+
+    if (paciente.nome.length == 0){
+        erros.push("O campo nome está vazio");
+    }
+
+    if (!validaPeso(paciente.peso)){
+        erros.push("Peso inválido");
+    }
+
+    if (!validaAltura(paciente.altura)){
+        erros.push("Altura inválida");
+    }
+
+    if(paciente.gordura.length == 0){
+        erros.push("O percentual de gordura está vazio");
+    }
+
+    if (paciente.peso.length == 0){
+        erros.push("O campo peso está vazio");
+    }
+
+    if (paciente.altura.length == 0){
+        erros.push("O campo altura está vazio");
+    }
+
+    return erros;
 }
